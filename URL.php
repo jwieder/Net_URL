@@ -136,7 +136,7 @@ class Net_URL {
                     $this->path = sprintf('%s/%s', $path, $urlinfo['path']);
                 }
             } else {
-				$this->path = '';
+                $this->path = '';
             }
     
             // Querystring
@@ -245,7 +245,4 @@ class Net_URL {
         return $qs;
     }
 }
-
-$u = new Net_URL('../www.example.com');
-echo $u->getUrl();
 ?>
