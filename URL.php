@@ -1,6 +1,6 @@
 <?php
 // +-----------------------------------------------------------------------+
-// | Copyright (c) 2002-2003, Richard Heyes                                     |
+// | Copyright (c) 2002-2003, Richard Heyes                                |
 // | All rights reserved.                                                  |
 // |                                                                       |
 // | Redistribution and use in source and binary forms, with or without    |
@@ -286,12 +286,12 @@ class Net_URL
     */
     function _parseRawQuerystring($querystring)
     {
-        $querystring = rawurldecode($querystring);
         $parts = preg_split('/&/', $querystring, -1, PREG_SPLIT_NO_EMPTY);
 
         $return = array();
         
         foreach ($parts as $part) {
+	        $part = rawurldecode($part);
             if (strpos($part, '=') !== false) {
                 $value = rawurlencode(substr($part, strpos($part, '=') + 1));
                 $key   = substr($part, 0, strpos($part, '='));
