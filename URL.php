@@ -217,7 +217,6 @@ class Net_URL
     */
     function addQueryString($name, $value, $preencoded = false)
     {
-        $this->querystring[$name] = $preencoded ? $value : rawurlencode($value);
         if ($preencoded) {
             $this->querystring[$name] = $value;
         } else {
