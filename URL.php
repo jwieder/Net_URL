@@ -129,7 +129,7 @@ class Net_URL {
         // Path
         if (!empty($urlinfo['path'])) {
             if ($urlinfo['path'][0] == '/') {
-                $this->path = $urlinfo['path'][0];
+                $this->path = $urlinfo['path'];
             } else {
                 $this->path .= '/' . $urlinfo['path'];
             }
