@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE package SYSTEM "../package.dtd">
 <package version="1.0">
+
   <name>Net_URL</name>
   <summary>Easy parsing of Urls</summary>
   <description>
-    Provides easy parsing of URLs and their constituent parts.
+Provides easy parsing of URLs and their constituent parts.
   </description>
-  <license>BSD</license>
+
   <maintainers>
     <maintainer>
       <user>richard</user>
@@ -17,12 +18,11 @@
   </maintainers>
 
   <release>
-    <version>1.0.2</version>
-    <date>2002-04-28</date>
+    <license>BSD</license>
+    <version>1.0.4</version>
+    <date>2002-07-27</date>
     <state>stable</state>
-    <notes>
-      updated to fix a minor irritation when running on windows
-    </notes>
+    <notes>License change</notes>
     <filelist>
       <dir name="/" baseinstalldir="Net">
         <file role="php">URL.php</file>
@@ -34,38 +34,36 @@
   </release>
 
   <changelog>
-  <release>
-    <version>1.0.1</version>
-    <date>2002-04-28</date>
-    <state>stable</state>
-    <notes>
-      Maintenance release. Bugs fixed with path detection and defaults.
-    </notes>
-    <filelist>
-      <dir name="/" baseinstalldir="Net">
-        <file role="php">URL.php</file>
-        <dir name="docs" role="doc">
-          <file role="doc">example.php</file>
-        </dir>
-      </dir>
-    </filelist>
-  </release>
+
+    <release>
+      <license>BSD</license>
+      <version>1.0.3</version>
+      <date>2002-06-20</date>
+      <state>stable</state>
+      <notes>Now uses HTTP_HOST if available.</notes>
+    </release>
+
+    <release>
+      <version>1.0.2</version>
+      <date>2002-04-28</date>
+      <state>stable</state>
+      <notes>updated to fix a minor irritation when running on windows</notes>
+    </release>
+
+    <release>
+      <version>1.0.1</version>
+      <date>2002-04-28</date>
+      <state>stable</state>
+      <notes>Maintenance release. Bugs fixed with path detection and defaults.</notes>
+    </release>
 
     <release>
       <version>1.0</version>
       <date>2002-02-17</date>
       <state>stable</state>
-      <notes>
-        This is the initial release of the Net_URL package.
-      </notes>
-      <filelist>
-        <dir name="/" baseinstalldir="Net">
-          <file role="php">URL.php</file>
-          <dir name="docs" role="doc">
-            <file role="doc">example.php</file>
-          </dir>
-        </dir>
-      </filelist>
+      <notes>This is the initial release of the Net_URL package.</notes>
     </release>
+
   </changelog>
+
 </package>
