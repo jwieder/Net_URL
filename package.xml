@@ -14,16 +14,21 @@
   </maintainers>
 
   <release>
-       <version>2.0.0</version>
-       <date>2004-06-26</date>
-       <license>BSD</license>
-       <state>stable</state>
-       <notes>Convert to PHP5 only. PHP4 users should continue with version 1.0.14</notes>
+    <version>2.0.0</version>
+    <date>2004-06-26</date>
+    <license>BSD</license>
+    <state>stable</state>
+    <notes>Convert to PHP5 only. PHP4 users should continue with version 1.0.14</notes>
 
-       <filelist>
-         <file role="php" baseinstalldir="Net" name="URL.php"/>
-         <file role="doc" baseinstalldir="Net" name="docs/example.php"/>
-       </filelist>
+    <filelist>
+        <file role="php" baseinstalldir="Net" name="URL.php"/>
+        <file role="doc" baseinstalldir="Net" name="docs/example.php"/>
+    </filelist>
+    
+    <deps>
+        <dep type="php" rel="ge" version="5.0" />
+    </deps>
+
   </release>
 
 
