@@ -162,7 +162,7 @@ class Net_URL {
                     $this->path = sprintf('%s/%s', $path, $urlinfo['path']);
                 }
             } else {
-                $this->path = '';
+                $this->path = '/';
             }
     
             // Querystring
