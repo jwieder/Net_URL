@@ -7,6 +7,7 @@
   <description>
 Provides easy parsing of URLs and their constituent parts.
   </description>
+  <license>BSD</license>
 
   <maintainers>
     <maintainer>
@@ -18,11 +19,10 @@ Provides easy parsing of URLs and their constituent parts.
   </maintainers>
 
   <release>
-    <license>BSD</license>
-    <version>1.0.4</version>
-    <date>2002-07-27</date>
+    <version>1.0.5</version>
+    <date>2002-11-14</date>
     <state>stable</state>
-    <notes>License change</notes>
+    <notes>Allow for URLS such as ...?foo</notes>
     <filelist>
       <dir name="/" baseinstalldir="Net">
         <file role="php">URL.php</file>
@@ -34,9 +34,14 @@ Provides easy parsing of URLs and their constituent parts.
   </release>
 
   <changelog>
+  	<release>
+	    <version>1.0.4</version>
+	    <date>2002-07-27</date>
+	    <state>stable</state>
+	    <notes>License change</notes>
+	</release>
 
     <release>
-      <license>BSD</license>
       <version>1.0.3</version>
       <date>2002-06-20</date>
       <state>stable</state>
