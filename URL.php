@@ -91,6 +91,12 @@ class Net_URL {
     var $anchor;
 
     /**
+    * Whether to use []
+    * @var bool
+    */
+    var $useBrackets;
+
+    /**
     * Constructor
     *
     * Parses the given url and stores the various parts
@@ -98,7 +104,7 @@ class Net_URL {
     *
     * @param $url The url
     */
-    function Net_URL($url = null)
+    function Net_URL($url = null, $useBrackets = true)
     {
         global $HTTP_SERVER_VARS;
 
@@ -123,6 +129,7 @@ class Net_URL {
         $this->path        = $HTTP_SERVER_VARS['PHP_SELF'];
         $this->querystring = isset($HTTP_SERVER_VARS['QUERY_STRING']) ? $this->_parseRawQuerystring($HTTP_SERVER_VARS['QUERY_STRING']) : null;
         $this->anchor      = '';
+        $this->useBrackets = $useBrackets;
 
         // Parse the uri and store the various parts
         if (!empty($url)) {
@@ -250,9 +257,9 @@ class Net_URL {
             foreach ($this->querystring as $name => $value) {
                 if (is_array($value)) {
                     foreach ($value as $k => $v) {
-                        $querystring[] = sprintf('%s[%s]=%s', $name, $k, $v);
+                        $querystring[] = $this->useBrackets ? sprintf('%s[%s]=%s', $name, $k, $v) : ($name . '=' . $v);
                     }
-                } elseif ($value) {
+                } elseif (!is_null($value)) {
                     $querystring[] = $name . '=' . $value;
                 } else {
                     $querystring[] = $name;
@@ -275,20 +282,37 @@ class Net_URL {
     */
     function _parseRawQuerystring($querystring)
     {
-        parse_str($querystring, $qs);
+        $querystring = rawurldecode($querystring);
+        $parts = preg_split('/&/', $querystring, -1, PREG_SPLIT_NO_EMPTY);
 
-        foreach ($qs as $key => $value) {
-            if (is_array($value)) {
-                foreach ($value as $k => $v) {
-                    $value[$k] = rawurlencode($v);
-                }
-                $qs[$key] = $value;
-            } elseif ($value) {
-                $qs[$key] = rawurlencode($value);
+        $return = array();
+        
+        foreach ($parts as $part) {
+            if (strpos($part, '=') !== false) {
+                $value = rawurlencode(substr($part, strpos($part, '=') + 1));
+                $key   = substr($part, 0, strpos($part, '='));
+            } else {
+                $value = null;
+                $key   = $part;
             }
-        }        
+            
+            if (substr($key, -2) == '[]') {
+                $key = substr($key, 0, -2);
+                if (@!is_array($return[$key])) {
+                    $return[$key]   = array();
+                    $return[$key][] = $value;
+                } else {
+                    $return[$key][] = $value;
+                }
+            } elseif (!$this->useBrackets AND !empty($return[$key])) {
+                $return[$key]   = (array)$return[$key];
+                $return[$key][] = $value;
+            } else {
+                $return[$key] = $value;
+            }
+        }
 
-        return $qs;
-    }
+        return $return;
+   }
 }
 ?>

@@ -39,7 +39,7 @@
 
 	include('../URL.php');
 
-	$url = &new Net_URL('http://www.example.com/foo/bar/index.php?jello');
+	$url = &new Net_URL('http://www.example.com/foo/bar/index.php?foo=bar');
 ?>
 <html>
 <body>
