@@ -19,10 +19,13 @@ Provides easy parsing of URLs and their constituent parts.
 	</maintainers>
 
 	<release>
-		<version>1.0.7</version>
-		<date>2002-12-07</date>
+		<version>1.0.8</version>
+		<date>2002-03-06</date>
 		<state>stable</state>
-		<notes>Added method to resolve URL paths of //, ../ and ./</notes>
+		<notes>
+Various bugs. Remove auto setting of default url to '/' if a url is supplied
+to the constructor. May cause BC issues.
+		</notes>
 		<filelist>
 			<dir name="/" baseinstalldir="Net">
 				<file role="php">URL.php</file>
@@ -34,6 +37,13 @@ Provides easy parsing of URLs and their constituent parts.
 	</release>
 
 	<changelog>
+		<release>
+			<version>1.0.7</version>
+			<date>2002-12-07</date>
+			<state>stable</state>
+			<notes>Added method to resolve URL paths of //, ../ and ./</notes>
+		</release>
+
 		<release>
 			<version>1.0.6</version>
 			<date>2002-12-07</date>
