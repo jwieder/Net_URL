@@ -31,7 +31,7 @@
 // +-----------------------------------------------------------------------+
 // | Author: Richard Heyes <richard@phpguru.org>                           |
 // +-----------------------------------------------------------------------+
-
+// $id$
 /**
 * This example will decode the url given and display its
 * constituent parts.

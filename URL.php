@@ -1,6 +1,6 @@
 <?php
 // +-----------------------------------------------------------------------+
-// | Copyright (c) 2002-2003, Richard Heyes                                |
+// | Copyright (c) 2002-2004, Richard Heyes                                |
 // | All rights reserved.                                                  |
 // |                                                                       |
 // | Redistribution and use in source and binary forms, with or without    |
@@ -31,7 +31,8 @@
 // +-----------------------------------------------------------------------+
 // | Author: Richard Heyes <richard@php.net>                               |
 // +-----------------------------------------------------------------------+
-//
+// $id$
+// 
 // Net_URL Class
 
 class Net_URL
