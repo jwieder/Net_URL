@@ -87,67 +87,63 @@ class Net_URL {
     function Net_URL($url = null)
     {
         global $HTTP_SERVER_VARS;
-        
+
         $this->url         = $url;
         $this->protocol    = 'http' . (@$HTTP_SERVER_VARS['HTTPS'] == 'on' ? 's' : '');
         $this->user        = '';
         $this->pass        = '';
         $this->host        = isset($HTTP_SERVER_VARS['SERVER_NAME']) ? $HTTP_SERVER_VARS['SERVER_NAME'] : 'localhost';
         $this->port        = isset($HTTP_SERVER_VARS['SERVER_PORT']) ? $HTTP_SERVER_VARS['SERVER_PORT'] : 80;
-        $this->path        = dirname($HTTP_SERVER_VARS['PHP_SELF']);
-        $this->querystring = array();
+        $this->path        = $HTTP_SERVER_VARS['PHP_SELF'];
+        $this->querystring = $this->_parseRawQuerystring($HTTP_SERVER_VARS['QUERY_STRING']);
         $this->anchor      = '';
 
         // Parse the uri and store the various parts
-        $urlinfo = parse_url($url);
-
-        // Protocol
-        if (!empty($urlinfo['scheme'])) {
-            $this->protocol = $urlinfo['scheme'];
-        }
-
-        // Username
-        if (!empty($urlinfo['user'])) {
-            $this->user = $urlinfo['user'];
-        }
-
-        // Password
-        if (!empty($urlinfo['pass'])) {
-            $this->pass = $urlinfo['pass'];
-        }
-
-        // Host
-        if (!empty($urlinfo['host'])) {
-            $this->host = $urlinfo['host'];
-        }
-
-        // Port
-        if (!empty($urlinfo['port'])) {
-            $this->port = $urlinfo['port'];
-        }
-
-        // Path
-        if (!empty($urlinfo['path'])) {
-            if ($urlinfo['path'][0] == '/') {
-                $this->path = $urlinfo['path'];
-            } else {
-                $this->path .= '/' . $urlinfo['path'];
+        if (!empty($url)) {
+            $urlinfo = parse_url($url);
+    
+            // Protocol
+            if (!empty($urlinfo['scheme'])) {
+                $this->protocol = $urlinfo['scheme'];
             }
-        }
-
-        // Querystring
-        if (!empty($urlinfo['query'])) {
-            $this->querystring = explode('&', $urlinfo['query']);
-            for ($i = 0; $i < count($this->querystring); $i++) {
-                list($name, $value) = explode('=', $this->querystring[$i]);
-                $querystring[$name] = $value;
+    
+            // Username
+            if (!empty($urlinfo['user'])) {
+                $this->user = $urlinfo['user'];
             }
-            $this->querystring = $querystring;    
-        }
-
-        // Anchor
-        if (!empty($urlinfo['fragment'])) {
-            $this->anchor = $urlinfo['fragment'];
+    
+            // Password
+            if (!empty($urlinfo['pass'])) {
+                $this->pass = $urlinfo['pass'];
+            }
+    
+            // Host
+            if (!empty($urlinfo['host'])) {
+                $this->host = $urlinfo['host'];
+            }
+    
+            // Port
+            if (!empty($urlinfo['port'])) {
+                $this->port = $urlinfo['port'];
+            }
+    
+            // Path
+            if (!empty($urlinfo['path'])) {
+                if ($urlinfo['path'][0] == '/') {
+                    $this->path = $urlinfo['path'];
+                } else {
+                    $path = dirname($this->path) == '/' ? '' : dirname($this->path);
+                    $this->path = sprintf('%s/%s', $path, $urlinfo['path']);
+                }
+            }
+    
+            // Querystring
+            $this->querystring = !empty($urlinfo['query']) ? $this->_parseRawQueryString($urlinfo['query']) : array();
+    
+            // Anchor
+            if (!empty($urlinfo['fragment'])) {
+                $this->anchor = $urlinfo['fragment'];
+            }
         }
     }
 
@@ -202,18 +198,13 @@ class Net_URL {
     * Sets the querystring to literally what you supply
     *
     * @param $querystring The querystring data. Should be of the format foo=bar&x=y etc
-    * @param $preencoded Whether data is already urlencoded or not, default = already encoded
     * @access public
     */
-    function addRawQueryString($querystring, $preencoded = true)
+    function addRawQueryString($querystring)
     {
-        $querystring = explode('&', $querystring);
-        for ($i = 0; $i < count($querystring); $i++) {
-            list($name, $value) = explode('=', $querystring[$i]);
-            $this->querystring[$name] = $preencoded ? $value : urlencode($value);
-        }
+        $this->querystring = $this->_parseRawQueryString($querystring);
     }
-
+    
     /**
     * Returns flat querystring
     *
@@ -233,6 +224,23 @@ class Net_URL {
 
         return $querystring;
     }
-}
 
+    /**
+    * Parses raw querystring and returns an array of it
+    *
+    * @param  string  $querystring The querystring to parse
+    * @return array                An array of the querystring data
+    * @access private
+    */
+    function _parseRawQuerystring($querystring)
+    {
+        parse_str($querystring, $qs);
+
+        foreach ($qs as $key => $value) {
+            $qs[$key] = rawurlencode($value);
+        }        
+
+        return $qs;
+    }
+}
 ?>
