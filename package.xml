@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<package>
+  <name>Net_URL</name>
+  <summary>Easy parsing of Urls</summary>
+  <maintainer>
+    <user>heyesr</user>
+    <name>Richard heyes</name>
+    <email>heyesr@php.net</email>
+    <role>lead</role>
+  </maintainer>
+
+  <release>
+    <version>1.0</version>
+    <date>2002-02-17</date>
+    <state>stable</state>
+    <notes>
+      This is the initial release of the Net_URL package.
+    </notes>
+    <filelist>
+      <dir name="/" baseinstalldir="Net">
+        <file role="php">URL.php</file>
+        <dir name="docs" role="doc">
+            <file>example.php</file>
+        </dir>
+      </dir>
+    </filelist>
+  </release>
+
+</package>
