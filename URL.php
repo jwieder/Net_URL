@@ -241,7 +241,8 @@ class Net_URL {
     */
     function getQueryString()
     {
-        if (is_array($this->querystring)) {
+        if (!empty($this->querystring) &&
+            is_array($this->querystring)) {
             foreach ($this->querystring as $name => $value) {
 				if (is_array($value)) {
 					foreach ($value as $k => $v) {
