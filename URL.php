@@ -121,7 +121,7 @@ class Net_URL {
         $this->host        = !empty($host) ? $host : (isset($HTTP_SERVER_VARS['SERVER_NAME']) ? $HTTP_SERVER_VARS['SERVER_NAME'] : 'localhost');
         $this->port        = !empty($port) ? $port : (isset($HTTP_SERVER_VARS['SERVER_PORT']) ? $HTTP_SERVER_VARS['SERVER_PORT'] : 80);
         $this->path        = $HTTP_SERVER_VARS['PHP_SELF'];
-        $this->querystring = $this->_parseRawQuerystring($HTTP_SERVER_VARS['QUERY_STRING']);
+        $this->querystring = isset($HTTP_SERVER_VARS['QUERY_STRING'])?$this->_parseRawQuerystring($HTTP_SERVER_VARS['QUERY_STRING']):'';
         $this->anchor      = '';
 
         // Parse the uri and store the various parts
@@ -241,7 +241,7 @@ class Net_URL {
     */
     function getQueryString()
     {
-        if (!empty($this->querystring)) {
+        if (is_array($this->querystring)) {
             foreach ($this->querystring as $name => $value) {
 				if (is_array($value)) {
 					foreach ($value as $k => $v) {
@@ -253,7 +253,7 @@ class Net_URL {
             }
             $querystring = implode('&', $querystring);
         } else {
-            $querystring = '';
+            $querystring = $this->querystring;
         }
 
         return $querystring;
@@ -270,6 +270,7 @@ class Net_URL {
     {
         parse_str($querystring, $qs);
 
+        if (!$qs) return $querystring;
         foreach ($qs as $key => $value) {
 			if (is_array($value)) {
 				foreach ($value as $k => $v) {
