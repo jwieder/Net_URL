@@ -121,7 +121,7 @@ class Net_URL {
         $this->host        = !empty($host) ? $host : (isset($HTTP_SERVER_VARS['SERVER_NAME']) ? $HTTP_SERVER_VARS['SERVER_NAME'] : 'localhost');
         $this->port        = !empty($port) ? $port : (isset($HTTP_SERVER_VARS['SERVER_PORT']) ? $HTTP_SERVER_VARS['SERVER_PORT'] : 80);
         $this->path        = $HTTP_SERVER_VARS['PHP_SELF'];
-        $this->querystring = isset($HTTP_SERVER_VARS['QUERY_STRING'])?$this->_parseRawQuerystring($HTTP_SERVER_VARS['QUERY_STRING']):'';
+        $this->querystring = $this->_parseRawQuerystring($HTTP_SERVER_VARS['QUERY_STRING']);
         $this->anchor      = '';
 
         // Parse the uri and store the various parts
@@ -202,11 +202,16 @@ class Net_URL {
     * @param $name Name of item
     * @param $value Value of item
     * @param $preencoded Whether value is urlencoded or not, default = not
-    * @access public<>
+    * @access public
     */
     function addQueryString($name, $value, $preencoded = false)
     {
         $this->querystring[$name] = $preencoded ? $value : urlencode($value);
+        if ($preencoded) {
+            $this->querystring[$name] = $value;
+        } else {
+            $this->querystring[$name] = is_array($value)? array_map('urlencode', $value): urlencode($value);
+        }
     }    
 
     /**
@@ -241,20 +246,19 @@ class Net_URL {
     */
     function getQueryString()
     {
-        if (!empty($this->querystring) &&
-            is_array($this->querystring)) {
+        if (!empty($this->querystring)) {
             foreach ($this->querystring as $name => $value) {
-				if (is_array($value)) {
-					foreach ($value as $k => $v) {
-						$querystring[] = sprintf('%s[%s]=%s', $name, $k, $v);
-					}
-				} else {
-                	$querystring[] = $name . '=' . $value;
-				}
+                if (is_array($value)) {
+                    foreach ($value as $k => $v) {
+                        $querystring[] = sprintf('%s[%s]=%s', $name, $k, $v);
+                    }
+                } else {
+                    $querystring[] = $name . '=' . $value;
+                }
             }
             $querystring = implode('&', $querystring);
         } else {
-            $querystring = $this->querystring;
+            $querystring = '';
         }
 
         return $querystring;
@@ -271,16 +275,15 @@ class Net_URL {
     {
         parse_str($querystring, $qs);
 
-        if (!$qs) return $querystring;
         foreach ($qs as $key => $value) {
-			if (is_array($value)) {
-				foreach ($value as $k => $v) {
-					$value[$k] = rawurlencode($v);
-				}
-				$qs[$key] = $value;
-			} else {
-	            $qs[$key] = rawurlencode($value);
-			}
+            if (is_array($value)) {
+                foreach ($value as $k => $v) {
+                    $value[$k] = rawurlencode($v);
+                }
+                $qs[$key] = $value;
+            } else {
+                $qs[$key] = rawurlencode($value);
+            }
         }        
 
         return $qs;
