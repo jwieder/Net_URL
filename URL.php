@@ -221,7 +221,7 @@ class Net_URL
         if ($preencoded) {
             $this->querystring[$name] = $value;
         } else {
-            $this->querystring[$name] = is_array($value)? array_map('urlencode', $value): rawurlencode($value);
+            $this->querystring[$name] = is_array($value)? array_map('rawurlencode', $value): rawurlencode($value);
         }
     }    
 
