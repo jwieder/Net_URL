@@ -92,8 +92,8 @@ class Net_URL {
         $this->protocol    = 'http' . (@$HTTP_SERVER_VARS['HTTPS'] == 'on' ? 's' : '');
         $this->user        = '';
         $this->pass        = '';
-        $this->host        = $HTTP_SERVER_VARS['SERVER_NAME'];
-        $this->port        = $HTTP_SERVER_VARS['SERVER_PORT'];
+        $this->host        = isset($HTTP_SERVER_VARS['SERVER_NAME']) ? $HTTP_SERVER_VARS['SERVER_NAME'] : 'localhost';
+        $this->port        = isset($HTTP_SERVER_VARS['SERVER_PORT']) ? $HTTP_SERVER_VARS['SERVER_PORT'] : 80;
         $this->path        = '/';
         $this->querystring = array();
         $this->anchor      = '';
