@@ -121,7 +121,7 @@ class Net_URL {
         $this->host        = !empty($host) ? $host : (isset($HTTP_SERVER_VARS['SERVER_NAME']) ? $HTTP_SERVER_VARS['SERVER_NAME'] : 'localhost');
         $this->port        = !empty($port) ? $port : (isset($HTTP_SERVER_VARS['SERVER_PORT']) ? $HTTP_SERVER_VARS['SERVER_PORT'] : 80);
         $this->path        = $HTTP_SERVER_VARS['PHP_SELF'];
-        $this->querystring = $this->_parseRawQuerystring($HTTP_SERVER_VARS['QUERY_STRING']);
+        $this->querystring = isset($HTTP_SERVER_VARS['QUERY_STRING']) ? $this->_parseRawQuerystring($HTTP_SERVER_VARS['QUERY_STRING']) : null;
         $this->anchor      = '';
 
         // Parse the uri and store the various parts
@@ -252,8 +252,10 @@ class Net_URL {
                     foreach ($value as $k => $v) {
                         $querystring[] = sprintf('%s[%s]=%s', $name, $k, $v);
                     }
-                } else {
+                } elseif ($value) {
                     $querystring[] = $name . '=' . $value;
+                } else {
+                    $querystring[] = $name;
                 }
             }
             $querystring = implode('&', $querystring);
@@ -281,7 +283,7 @@ class Net_URL {
                     $value[$k] = rawurlencode($v);
                 }
                 $qs[$key] = $value;
-            } else {
+            } elseif ($value) {
                 $qs[$key] = rawurlencode($value);
             }
         }        
