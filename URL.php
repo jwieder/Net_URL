@@ -29,7 +29,7 @@
 // | OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  |
 // |                                                                       |
 // +-----------------------------------------------------------------------+
-// | Author: Richard Heyes <richard@php.net>                               |
+// | Author: Richard Heyes <richard at php net>                            |
 // +-----------------------------------------------------------------------+
 // $Id$
 // 
@@ -98,7 +98,17 @@ class Net_URL
     var $useBrackets;
 
     /**
-    * Constructor
+    * PHP4 Constructor
+    *
+    * @see __construct()
+    */
+	function Net_URL($url = null, $useBrackets = true)
+	{
+		$this->__construct($url, $useBrackets);
+	}
+
+    /**
+    * PHP5 Constructor
     *
     * Parses the given url and stores the various parts
     * Defaults are used in certain cases
@@ -108,9 +118,9 @@ class Net_URL
 	*                            multiple querystrings with the same name
 	*                            exist
     */
-    function Net_URL($url = null, $useBrackets = true)
+    function __construct($url = null, $useBrackets = true)
     {
-        global $HTTP_SERVER_VARS;
+        $HTTP_SERVER_VARS  = !empty($_SERVER) ? $_SERVER : $GLOBALS['HTTP_SERVER_VARS'];
 
         $this->useBrackets = $useBrackets;
         $this->url         = $url;
@@ -122,8 +132,11 @@ class Net_URL
 		$this->querystring = array();
 		$this->anchor      = '';
 
-		// Only use defaults if not an absolute URL given
+        // Only use defaults if not an absolute URL given
 		if (!preg_match('/^[a-z0-9]+:\/\//i', $url)) {
+
+            $this->protocol    = (@$HTTP_SERVER_VARS['HTTPS'] == 'on' ? 'https' : 'http');
+
 	        /**
 	        * Figure out host/port
 	        */
@@ -132,15 +145,14 @@ class Net_URL
 	            if (!empty($matches[3])) {
 	                $port = $matches[3];
 	            } else {
-	                $port = '80';
+	                $port = $this->getStandardPort($this->protocol);
 	            }
 	        }
-	
-	        $this->protocol    = 'http' . (@$HTTP_SERVER_VARS['HTTPS'] == 'on' ? 's' : '');
+
 	        $this->user        = '';
 	        $this->pass        = '';
 	        $this->host        = !empty($host) ? $host : (isset($HTTP_SERVER_VARS['SERVER_NAME']) ? $HTTP_SERVER_VARS['SERVER_NAME'] : 'localhost');
-	        $this->port        = !empty($port) ? $port : (isset($HTTP_SERVER_VARS['SERVER_PORT']) ? $HTTP_SERVER_VARS['SERVER_PORT'] : 80);
+	        $this->port        = !empty($port) ? $port : (isset($HTTP_SERVER_VARS['SERVER_PORT']) ? $HTTP_SERVER_VARS['SERVER_PORT'] : $this->getStandardPort($this->protocol));
 	        $this->path        = !empty($HTTP_SERVER_VARS['PHP_SELF']) ? $HTTP_SERVER_VARS['PHP_SELF'] : '/';
 	        $this->querystring = isset($HTTP_SERVER_VARS['QUERY_STRING']) ? $this->_parseRawQuerystring($HTTP_SERVER_VARS['QUERY_STRING']) : null;
 	        $this->anchor      = '';
@@ -152,11 +164,12 @@ class Net_URL
 
             // Default querystring
             $this->querystring = array();
-    
+
             foreach ($urlinfo as $key => $value) {
                 switch ($key) {
                     case 'scheme':
                         $this->protocol = $value;
+                        $this->port     = $this->getStandardPort($value);
                         break;
                     
                     case 'user':
@@ -200,7 +213,7 @@ class Net_URL
         $this->url = $this->protocol . '://'
                    . $this->user . (!empty($this->pass) ? ':' : '')
                    . $this->pass . (!empty($this->user) ? '@' : '')
-                   . $this->host . ($this->port == '80' ? '' : ':' . $this->port)
+                   . $this->host . ($this->port == $this->getStandardPort($this->protocol) ? '' : ':' . $this->port)
                    . $this->path
                    . (!empty($querystring) ? '?' . $querystring : '')
                    . (!empty($this->anchor) ? '#' . $this->anchor : '');
@@ -221,7 +234,7 @@ class Net_URL
         if ($preencoded) {
             $this->querystring[$name] = $value;
         } else {
-            $this->querystring[$name] = is_array($value)? array_map('rawurlencode', $value): rawurlencode($value);
+            $this->querystring[$name] = is_array($value) ? array_map('rawurlencode', $value): rawurlencode($value);
         }
     }    
 
@@ -269,7 +282,7 @@ class Net_URL
                     $querystring[] = $name;
                 }
             }
-            $querystring = implode('&', $querystring);
+            $querystring = implode(ini_get('arg_separator.output'), $querystring);
         } else {
             $querystring = '';
         }
@@ -286,7 +299,7 @@ class Net_URL
     */
     function _parseRawQuerystring($querystring)
     {
-        $parts  = preg_split('/&/', $querystring, -1, PREG_SPLIT_NO_EMPTY);
+        $parts  = preg_split('/' . preg_quote(ini_get('arg_separator.input')) . '/', $querystring, -1, PREG_SPLIT_NO_EMPTY);
         $return = array();
         
         foreach ($parts as $part) {
@@ -357,5 +370,28 @@ class Net_URL
 
         return implode('/', $path);
     }
+
+    /**
+    * Returns the standard port number for a protocol
+    *
+    * @param  string  $scheme The protocol to lookup
+    * @return integer         Port number or NULL if no scheme matches
+    *
+    * @author Philippe Jausions <Philippe.Jausions@11abacus.com>
+    */
+    function getStandardPort($scheme)
+    {
+        switch (strtolower($scheme)) {
+            case 'http':    return 80;
+            case 'https':   return 443;
+            case 'ftp':     return 21;
+            case 'imap':    return 143;
+            case 'imaps':   return 993;
+            case 'pop3':    return 110;
+            case 'pop3s':   return 995;
+            default:        return null;
+       }
+    }
+
 }
 ?>
