@@ -111,33 +111,44 @@ class Net_URL
     {
         global $HTTP_SERVER_VARS;
 
-        /**
-        * Figure out host/port
-        */
-        if (!empty($HTTP_SERVER_VARS['HTTP_HOST']) AND preg_match('/^(.*)(:([0-9]+))?$/U', $HTTP_SERVER_VARS['HTTP_HOST'], $matches)) {
-            $host = $matches[1];
-            if (!empty($matches[3])) {
-                $port = $matches[3];
-            } else {
-                $port = '80';
-            }
-        }
-
         $this->useBrackets = $useBrackets;
         $this->url         = $url;
-        $this->protocol    = 'http' . (@$HTTP_SERVER_VARS['HTTPS'] == 'on' ? 's' : '');
         $this->user        = '';
         $this->pass        = '';
-        $this->host        = !empty($host) ? $host : (isset($HTTP_SERVER_VARS['SERVER_NAME']) ? $HTTP_SERVER_VARS['SERVER_NAME'] : 'localhost');
-        $this->port        = !empty($port) ? $port : (isset($HTTP_SERVER_VARS['SERVER_PORT']) ? $HTTP_SERVER_VARS['SERVER_PORT'] : 80);
-        $this->path        = !empty($HTTP_SERVER_VARS['PHP_SELF']) ? $HTTP_SERVER_VARS['PHP_SELF'] : '/';
-        $this->querystring = isset($HTTP_SERVER_VARS['QUERY_STRING']) ? $this->_parseRawQuerystring($HTTP_SERVER_VARS['QUERY_STRING']) : null;
-        $this->anchor      = '';
+		$this->host        = '';
+		$this->port        = 80;
+		$this->path        = '';
+		$this->querystring = array();
+		$this->anchor      = '';
+
+		// Only use defaults if not an absolute URL given
+		if (!preg_match('/^(https?|ftp|telnet|gopher|file):\/\//', $url)) {
+	        /**
+	        * Figure out host/port
+	        */
+	        if (!empty($HTTP_SERVER_VARS['HTTP_HOST']) AND preg_match('/^(.*)(:([0-9]+))?$/U', $HTTP_SERVER_VARS['HTTP_HOST'], $matches)) {
+	            $host = $matches[1];
+	            if (!empty($matches[3])) {
+	                $port = $matches[3];
+	            } else {
+	                $port = '80';
+	            }
+	        }
+	
+	        $this->protocol    = 'http' . (@$HTTP_SERVER_VARS['HTTPS'] == 'on' ? 's' : '');
+	        $this->user        = '';
+	        $this->pass        = '';
+	        $this->host        = !empty($host) ? $host : (isset($HTTP_SERVER_VARS['SERVER_NAME']) ? $HTTP_SERVER_VARS['SERVER_NAME'] : 'localhost');
+	        $this->port        = !empty($port) ? $port : (isset($HTTP_SERVER_VARS['SERVER_PORT']) ? $HTTP_SERVER_VARS['SERVER_PORT'] : 80);
+	        $this->path        = !empty($HTTP_SERVER_VARS['PHP_SELF']) ? $HTTP_SERVER_VARS['PHP_SELF'] : '/';
+	        $this->querystring = isset($HTTP_SERVER_VARS['QUERY_STRING']) ? $this->_parseRawQuerystring($HTTP_SERVER_VARS['QUERY_STRING']) : null;
+	        $this->anchor      = '';
+		}
 
         // Parse the url and store the various parts
         if (!empty($url)) {
             $urlinfo = parse_url($url);
-            
+
             // Default querystring
             $this->querystring = array();
     
