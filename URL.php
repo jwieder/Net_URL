@@ -125,7 +125,7 @@ class Net_URL
         // Only use defaults if not an absolute URL given
         if (!preg_match('/^[a-z0-9]+:\/\//i', $url)) {
 
-            $this->protocol = (@$_SERVER['HTTPS'] == 'on' ? 'https' : 'http');
+            $this->protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http');
 
             /**
             * Figure out host/port
@@ -370,7 +370,7 @@ class Net_URL
             }
             if (substr($key, -2) == '[]') {
                 $key = substr($key, 0, -2);
-                if (@!is_array($return[$key])) {
+                if (empty($return[$key]) || !is_array($return[$key])) {
                     $return[$key]   = array();
                     $return[$key][] = $value;
                 } else {
