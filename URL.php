@@ -122,7 +122,7 @@ class Net_URL
 		$this->anchor      = '';
 
 		// Only use defaults if not an absolute URL given
-		if (!preg_match('/^(https?|ftp|telnet|gopher|file):\/\//', $url)) {
+		if (!preg_match('/^[a-z0-9]+:\/\//i', $url)) {
 	        /**
 	        * Figure out host/port
 	        */
