@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<package>
+<!DOCTYPE package SYSTEM "../package.dtd">
+<package version="1.0">
   <name>Net_URL</name>
   <summary>Easy parsing of Urls</summary>
-  <maintainer>
-    <user>heyesr</user>
-    <name>Richard heyes</name>
-    <email>heyesr@php.net</email>
-    <role>lead</role>
-  </maintainer>
+  <maintainers>
+    <maintainer>
+      <user>heyesr</user>
+      <name>Richard heyes</name>
+      <email>heyesr@php.net</email>
+      <role>lead</role>
+    </maintainer>
+  </maintainers>
 
   <release>
     <version>1.0</version>
@@ -20,7 +23,7 @@
       <dir name="/" baseinstalldir="Net">
         <file role="php">URL.php</file>
         <dir name="docs" role="doc">
-            <file>example.php</file>
+	  <file role="doc">example.php</file>
         </dir>
       </dir>
     </filelist>
