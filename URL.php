@@ -87,14 +87,14 @@ class Net_URL {
     function Net_URL($url = null)
     {
         global $HTTP_SERVER_VARS;
-		
+        
         $this->url         = $url;
         $this->protocol    = 'http' . (@$HTTP_SERVER_VARS['HTTPS'] == 'on' ? 's' : '');
         $this->user        = '';
         $this->pass        = '';
         $this->host        = isset($HTTP_SERVER_VARS['SERVER_NAME']) ? $HTTP_SERVER_VARS['SERVER_NAME'] : 'localhost';
         $this->port        = isset($HTTP_SERVER_VARS['SERVER_PORT']) ? $HTTP_SERVER_VARS['SERVER_PORT'] : 80;
-        $this->path        = '/';
+        $this->path        = dirname($HTTP_SERVER_VARS['PHP_SELF']);
         $this->querystring = array();
         $this->anchor      = '';
 
@@ -128,7 +128,11 @@ class Net_URL {
 
         // Path
         if (!empty($urlinfo['path'])) {
-            $this->path = $urlinfo['path'];
+            if ($urlinfo['path'][0] == '/') {
+                $this->path = $urlinfo['path'][0];
+            } else {
+                $this->path .= '/' . $urlinfo['path'];
+            }
         }
 
         // Querystring
