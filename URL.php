@@ -180,6 +180,19 @@ class Net_URL {
     {
         $this->querystring[$name] = $preencoded ? $value : urlencode($value);
     }    
+
+    /**
+    * Removes a querystring item
+    *
+    * @param $name Name of item
+    * @access public<>
+    */
+    function removeQueryString($name)
+    {
+        if (isset($this->querystring[$name])) {
+            unset($this->querystring[$name]);
+        }
+    }    
     
     /**
     * Sets the querystring to literally what you supply
