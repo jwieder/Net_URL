@@ -103,10 +103,10 @@ class Net_URL
     *
     * @see __construct()
     */
-	function Net_URL($url = null, $useBrackets = true)
-	{
-		$this->__construct($url, $useBrackets);
-	}
+    function Net_URL($url = null, $useBrackets = true)
+    {
+        $this->__construct($url, $useBrackets);
+    }
 
     /**
     * PHP5 Constructor
@@ -115,9 +115,9 @@ class Net_URL
     * Defaults are used in certain cases
     *
     * @param string $url         Optional URL
-	* @param bool   $useBrackets Whether to use square brackets when
-	*                            multiple querystrings with the same name
-	*                            exist
+    * @param bool   $useBrackets Whether to use square brackets when
+    *                            multiple querystrings with the same name
+    *                            exist
     */
     function __construct($url = null, $useBrackets = true)
     {
@@ -127,37 +127,37 @@ class Net_URL
         $this->url         = $url;
         $this->user        = '';
         $this->pass        = '';
-		$this->host        = '';
-		$this->port        = 80;
-		$this->path        = '';
-		$this->querystring = array();
-		$this->anchor      = '';
+        $this->host        = '';
+        $this->port        = 80;
+        $this->path        = '';
+        $this->querystring = array();
+        $this->anchor      = '';
 
         // Only use defaults if not an absolute URL given
-		if (!preg_match('/^[a-z0-9]+:\/\//i', $url)) {
+        if (!preg_match('/^[a-z0-9]+:\/\//i', $url)) {
 
             $this->protocol    = (@$HTTP_SERVER_VARS['HTTPS'] == 'on' ? 'https' : 'http');
 
-	        /**
-	        * Figure out host/port
-	        */
-	        if (!empty($HTTP_SERVER_VARS['HTTP_HOST']) AND preg_match('/^(.*)(:([0-9]+))?$/U', $HTTP_SERVER_VARS['HTTP_HOST'], $matches)) {
-	            $host = $matches[1];
-	            if (!empty($matches[3])) {
-	                $port = $matches[3];
-	            } else {
-	                $port = $this->getStandardPort($this->protocol);
-	            }
-	        }
+            /**
+            * Figure out host/port
+            */
+            if (!empty($HTTP_SERVER_VARS['HTTP_HOST']) AND preg_match('/^(.*)(:([0-9]+))?$/U', $HTTP_SERVER_VARS['HTTP_HOST'], $matches)) {
+                $host = $matches[1];
+                if (!empty($matches[3])) {
+                    $port = $matches[3];
+                } else {
+                    $port = $this->getStandardPort($this->protocol);
+                }
+            }
 
-	        $this->user        = '';
-	        $this->pass        = '';
-	        $this->host        = !empty($host) ? $host : (isset($HTTP_SERVER_VARS['SERVER_NAME']) ? $HTTP_SERVER_VARS['SERVER_NAME'] : 'localhost');
-	        $this->port        = !empty($port) ? $port : (isset($HTTP_SERVER_VARS['SERVER_PORT']) ? $HTTP_SERVER_VARS['SERVER_PORT'] : $this->getStandardPort($this->protocol));
-	        $this->path        = !empty($HTTP_SERVER_VARS['PHP_SELF']) ? $HTTP_SERVER_VARS['PHP_SELF'] : '/';
-	        $this->querystring = isset($HTTP_SERVER_VARS['QUERY_STRING']) ? $this->_parseRawQuerystring($HTTP_SERVER_VARS['QUERY_STRING']) : null;
-	        $this->anchor      = '';
-		}
+            $this->user        = '';
+            $this->pass        = '';
+            $this->host        = !empty($host) ? $host : (isset($HTTP_SERVER_VARS['SERVER_NAME']) ? $HTTP_SERVER_VARS['SERVER_NAME'] : 'localhost');
+            $this->port        = !empty($port) ? $port : (isset($HTTP_SERVER_VARS['SERVER_PORT']) ? $HTTP_SERVER_VARS['SERVER_PORT'] : $this->getStandardPort($this->protocol));
+            $this->path        = !empty($HTTP_SERVER_VARS['PHP_SELF']) ? $HTTP_SERVER_VARS['PHP_SELF'] : '/';
+            $this->querystring = isset($HTTP_SERVER_VARS['QUERY_STRING']) ? $this->_parseRawQuerystring($HTTP_SERVER_VARS['QUERY_STRING']) : null;
+            $this->anchor      = '';
+        }
 
         // Parse the url and store the various parts
         if (!empty($url)) {
@@ -393,7 +393,7 @@ class Net_URL
             default:        return null;
        }
     }
-    
+
     /**
     * Forces the URL to a particular protocol
     *
