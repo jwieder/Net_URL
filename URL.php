@@ -217,11 +217,11 @@ class Net_URL
     */
     function addQueryString($name, $value, $preencoded = false)
     {
-        $this->querystring[$name] = $preencoded ? $value : urlencode($value);
+        $this->querystring[$name] = $preencoded ? $value : rawurlencode($value);
         if ($preencoded) {
             $this->querystring[$name] = $value;
         } else {
-            $this->querystring[$name] = is_array($value)? array_map('urlencode', $value): urlencode($value);
+            $this->querystring[$name] = is_array($value)? array_map('urlencode', $value): rawurlencode($value);
         }
     }    
 
@@ -286,20 +286,17 @@ class Net_URL
     */
     function _parseRawQuerystring($querystring)
     {
-        $parts = preg_split('/&/', $querystring, -1, PREG_SPLIT_NO_EMPTY);
-
+        $parts  = preg_split('/&/', $querystring, -1, PREG_SPLIT_NO_EMPTY);
         $return = array();
         
         foreach ($parts as $part) {
-	        $part = rawurldecode($part);
             if (strpos($part, '=') !== false) {
-                $value = rawurlencode(substr($part, strpos($part, '=') + 1));
+                $value = substr($part, strpos($part, '=') + 1);
                 $key   = substr($part, 0, strpos($part, '='));
             } else {
                 $value = null;
                 $key   = $part;
             }
-            
             if (substr($key, -2) == '[]') {
                 $key = substr($key, 0, -2);
                 if (@!is_array($return[$key])) {
