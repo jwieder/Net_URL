@@ -137,7 +137,7 @@ class Net_URL {
                 }
             } else {
 				$this->path = '';
-			}
+            }
     
             // Querystring
             $this->querystring = !empty($urlinfo['query']) ? $this->_parseRawQueryString($urlinfo['query']) : array();
