@@ -135,7 +135,9 @@ class Net_URL {
                     $path = dirname($this->path) == '/' ? '' : dirname($this->path);
                     $this->path = sprintf('%s/%s', $path, $urlinfo['path']);
                 }
-            }
+            } else {
+				$this->path = '';
+			}
     
             // Querystring
             $this->querystring = !empty($urlinfo['query']) ? $this->_parseRawQueryString($urlinfo['query']) : array();
@@ -243,4 +245,7 @@ class Net_URL {
         return $qs;
     }
 }
+
+$u = new Net_URL('../www.example.com');
+echo $u->getUrl();
 ?>
