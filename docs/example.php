@@ -37,7 +37,7 @@
 * constituent parts.
 */
 
-	include('../URL.php');
+	include('Net/URL.php');
 
 	$url = &new Net_URL('http://www.example.com/foo/bar/index.php?foo=bar');
 ?>

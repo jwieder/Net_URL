@@ -34,8 +34,8 @@
 //
 // Net_URL Class
 
-class Net_URL {
-
+class Net_URL
+{
     /**
     * Full url
     * @var string
@@ -131,53 +131,44 @@ class Net_URL {
         $this->anchor      = '';
         $this->useBrackets = $useBrackets;
 
-        // Parse the uri and store the various parts
+        // Parse the url and store the various parts
         if (!empty($url)) {
             $urlinfo = parse_url($url);
+            
+            // Default path and querystring
+            $this->path        = '/';
+            $this->querystring = array();
     
-            // Protocol
-            if (!empty($urlinfo['scheme'])) {
-                $this->protocol = $urlinfo['scheme'];
-            }
-    
-            // Username
-            if (!empty($urlinfo['user'])) {
-                $this->user = $urlinfo['user'];
-            }
-    
-            // Password
-            if (!empty($urlinfo['pass'])) {
-                $this->pass = $urlinfo['pass'];
-            }
-    
-            // Host
-            if (!empty($urlinfo['host'])) {
-                $this->host = $urlinfo['host'];
-            }
-    
-            // Port
-            if (!empty($urlinfo['port'])) {
-                $this->port = $urlinfo['port'];
-            }
-    
-            // Path
-            if (!empty($urlinfo['path'])) {
-                if ($urlinfo['path'][0] == '/') {
-                    $this->path = $urlinfo['path'];
-                } else {
-                    $path = dirname($this->path) == DIRECTORY_SEPARATOR ? '' : dirname($this->path);
-                    $this->path = sprintf('%s/%s', $path, $urlinfo['path']);
+            foreach ($urlinfo as $key => $value) {
+                switch ($key) {
+                    case 'scheme':
+                        $this->protocol = $value;
+                        break;
+                    
+                    case 'user':
+                    case 'pass':
+                    case 'host':
+                    case 'port':
+                        $this->$key = $value;
+                        break;
+
+                    case 'path':
+                        if ($value[0] == '/') {
+                            $this->path = $value;
+                        } else {
+                            $path = dirname($this->path) == DIRECTORY_SEPARATOR ? '' : dirname($this->path);
+                            $this->path = sprintf('%s/%s', $path, $value);
+                        }
+                        break;
+                    
+                    case 'query':
+                        $this->querystring = $this->_parseRawQueryString($value);
+                        break;
+
+                    case 'fragment':
+                        $this->anchor = $value;
+                        break;
                 }
-            } else {
-                $this->path = '/';
-            }
-    
-            // Querystring
-            $this->querystring = !empty($urlinfo['query']) ? $this->_parseRawQueryString($urlinfo['query']) : array();
-    
-            // Anchor
-            if (!empty($urlinfo['fragment'])) {
-                $this->anchor = $urlinfo['fragment'];
             }
         }
     }
@@ -313,6 +304,48 @@ class Net_URL {
         }
 
         return $return;
-   }
+    }
+    
+    /**
+    * Resolves //, ../ and ./ from a path and returns
+    * the result. Eg:
+    *
+    * /foo/bar/../boo.php    => /foo/boo.php
+    * /foo/bar/../../boo.php => /boo.php
+    * /foo/bar/.././/boo.php => /foo/boo.php
+    *
+    * This method can also be called statically.
+    *
+    * @param  string $url URL path to resolve
+    * @return string      The result
+    */
+    function resolvePath($path)
+    {
+        $path = explode('/', str_replace('//', '/', $path));
+        
+        for ($i=0; $i<count($path); $i++) {
+            if ($path[$i] == '.') {
+                unset($path[$i]);
+                $path = array_values($path);
+                $i--;
+
+            } elseif ($path[$i] == '..' AND ($i > 1 OR ($i == 1 AND $path[0] != '') ) ) {
+                unset($path[$i]);
+                unset($path[$i-1]);
+                $path = array_values($path);
+                $i -= 2;
+
+            } elseif ($path[$i] == '..' AND $i == 1 AND $path[0] == '') {
+                unset($path[$i]);
+                $path = array_values($path);
+                $i--;
+
+            } else {
+                continue;
+            }
+        }
+
+        return implode('/', $path);
+    }
 }
 ?>
