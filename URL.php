@@ -300,7 +300,7 @@ class Net_URL
     */
     function _parseRawQuerystring($querystring)
     {
-        $parts  = preg_split('/' . preg_quote(ini_get('arg_separator.input')) . '/', $querystring, -1, PREG_SPLIT_NO_EMPTY);
+        $parts  = preg_split('/[' . preg_quote(ini_get('arg_separator.input'), '/') . ']/', $querystring, -1, PREG_SPLIT_NO_EMPTY);
         $return = array();
 
         foreach ($parts as $part) {
