@@ -257,6 +257,10 @@ class Net_URL
     {
         if (!empty($this->querystring)) {
             foreach ($this->querystring as $name => $value) {
+                
+                // Encode var name
+                $name = rawurlencode($name);
+                
                 if (is_array($value)) {
                     foreach ($value as $k => $v) {
                         $querystring[] = $this->useBrackets ? sprintf('%s[%s]=%s', $name, $k, $v) : ($name . '=' . $v);
@@ -368,14 +372,26 @@ class Net_URL
                 $value = null;
                 $key   = $part;
             }
-            if (substr($key, -2) == '[]') {
-                $key = substr($key, 0, -2);
+
+            $key = rawurldecode($key);
+
+            if (preg_match('#^(.*)\[([0-9a-z_-]*)\]#i', $key, $matches)) {
+                $key = $matches[1];
+                $idx = $matches[2];
+
+                // Ensure is an array
                 if (empty($return[$key]) || !is_array($return[$key])) {
-                    $return[$key]   = array();
-                    $return[$key][] = $value;
-                } else {
-                    $return[$key][] = $value;
+                    $return[$key] = array();
                 }
+
+                // Add data
+                if ($idx === '') {
+                    $return[$key][] = $value;
+
+                } else {
+                    $return[$key][$idx] = $value;
+                }
+
             } elseif (!$this->useBrackets AND !empty($return[$key])) {
                 $return[$key]   = (array)$return[$key];
                 $return[$key][] = $value;
