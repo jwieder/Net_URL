@@ -29,7 +29,7 @@
 // | OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  |
 // |                                                                       |
 // +-----------------------------------------------------------------------+
-// | Author: Richard Heyes <richard@phpguru.org>                           |
+// | Author: Richard Heyes <richard@php.net>                               |
 // +-----------------------------------------------------------------------+
 //
 // Net_URL Class
@@ -102,7 +102,10 @@ class Net_URL
     * Parses the given url and stores the various parts
     * Defaults are used in certain cases
     *
-    * @param $url The url
+    * @param string $url         Optional URL
+	* @param bool   $useBrackets Whether to use square brackets when
+	*                            multiple querystrings with the same name
+	*                            exist
     */
     function Net_URL($url = null, $useBrackets = true)
     {
@@ -120,23 +123,22 @@ class Net_URL
             }
         }
 
+        $this->useBrackets = $useBrackets;
         $this->url         = $url;
         $this->protocol    = 'http' . (@$HTTP_SERVER_VARS['HTTPS'] == 'on' ? 's' : '');
         $this->user        = '';
         $this->pass        = '';
         $this->host        = !empty($host) ? $host : (isset($HTTP_SERVER_VARS['SERVER_NAME']) ? $HTTP_SERVER_VARS['SERVER_NAME'] : 'localhost');
         $this->port        = !empty($port) ? $port : (isset($HTTP_SERVER_VARS['SERVER_PORT']) ? $HTTP_SERVER_VARS['SERVER_PORT'] : 80);
-        $this->path        = $HTTP_SERVER_VARS['PHP_SELF'];
+        $this->path        = !empty($HTTP_SERVER_VARS['PHP_SELF']) ? $HTTP_SERVER_VARS['PHP_SELF'] : '/';
         $this->querystring = isset($HTTP_SERVER_VARS['QUERY_STRING']) ? $this->_parseRawQuerystring($HTTP_SERVER_VARS['QUERY_STRING']) : null;
         $this->anchor      = '';
-        $this->useBrackets = $useBrackets;
 
         // Parse the url and store the various parts
         if (!empty($url)) {
             $urlinfo = parse_url($url);
             
-            // Default path and querystring
-            $this->path        = '/';
+            // Default querystring
             $this->querystring = array();
     
             foreach ($urlinfo as $key => $value) {
@@ -153,7 +155,7 @@ class Net_URL
                         break;
 
                     case 'path':
-                        if ($value[0] == '/') {
+                        if ($value{0} == '/') {
                             $this->path = $value;
                         } else {
                             $path = dirname($this->path) == DIRECTORY_SEPARATOR ? '' : dirname($this->path);
@@ -197,9 +199,9 @@ class Net_URL
     /**
     * Adds a querystring item
     *
-    * @param $name Name of item
-    * @param $value Value of item
-    * @param $preencoded Whether value is urlencoded or not, default = not
+    * @param  string $name       Name of item
+    * @param  string $value      Value of item
+    * @param  bool   $preencoded Whether value is urlencoded or not, default = not
     * @access public
     */
     function addQueryString($name, $value, $preencoded = false)
@@ -215,8 +217,8 @@ class Net_URL
     /**
     * Removes a querystring item
     *
-    * @param $name Name of item
-    * @access public<>
+    * @param  string $name Name of item
+    * @access public
     */
     function removeQueryString($name)
     {
@@ -228,7 +230,7 @@ class Net_URL
     /**
     * Sets the querystring to literally what you supply
     *
-    * @param $querystring The querystring data. Should be of the format foo=bar&x=y etc
+    * @param  string $querystring The querystring data. Should be of the format foo=bar&x=y etc
     * @access public
     */
     function addRawQueryString($querystring)
