@@ -14,11 +14,11 @@
   </maintainers>
 
   <release>
-       <version>1.0.12</version>
-       <date>2004-05-08</date>
+       <version>2.0.0</version>
+       <date>2004-06-26</date>
        <license>BSD</license>
        <state>stable</state>
-       <notes>Bug fixes release (#704 and #1036)</notes>
+       <notes>Convert to PHP5 only. PHP4 users should continue with version 1.0.14</notes>
 
        <filelist>
          <file role="php" baseinstalldir="Net" name="URL.php"/>
@@ -28,6 +28,30 @@
 
 
   <changelog>
+      <release>
+        <version>1.0.14</version>
+        <date>2004-06-19</date>
+        <license>BSD</license>
+        <state>stable</state>
+        <notes>Whitespace</notes>
+      </release>
+      
+      <release>
+           <version>1.0.13</version>
+           <date>2004-06-05</date>
+           <license>BSD</license>
+           <state>stable</state>
+           <notes>Fix bug 1558</notes>
+      </release>
+      
+      <release>
+        <version>1.0.12</version>
+        <date>2004-05-08</date>
+        <license>BSD</license>
+        <state>stable</state>
+        <notes>Bug fixes release (#704 and #1036)</notes>
+      </release>
+
       <release>
         <version>1.0.11</version>
         <date>2004-01-17</date>
