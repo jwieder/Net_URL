@@ -11,7 +11,7 @@
 // |   notice, this list of conditions and the following disclaimer.       |
 // | o Redistributions in binary form must reproduce the above copyright   |
 // |   notice, this list of conditions and the following disclaimer in the |
-// |   documentation and/or other materials provided with the distribution.| 
+// |   documentation and/or other materials provided with the distribution.|
 // | o The names of the authors may not be used to endorse or promote      |
 // |   products derived from this software without specific prior written  |
 // |   permission.                                                         |
@@ -31,8 +31,9 @@
 // +-----------------------------------------------------------------------+
 // | Author: Richard Heyes <richard at php net>                            |
 // +-----------------------------------------------------------------------+
+//
 // $Id$
-// 
+//
 // Net_URL Class
 
 class Net_URL
@@ -42,7 +43,7 @@ class Net_URL
     * @var string
     */
     var $url;
-    
+
     /**
     * Protocol
     * @var string
@@ -66,19 +67,19 @@ class Net_URL
     * @var string
     */
     var $host;
-    
+
     /**
     * Port
     * @var integer
     */
     var $port;
-    
+
     /**
     * Path
     * @var string
     */
     var $path;
-    
+
     /**
     * Query string
     * @var array
@@ -171,7 +172,7 @@ class Net_URL
                         $this->protocol = $value;
                         $this->port     = $this->getStandardPort($value);
                         break;
-                    
+
                     case 'user':
                     case 'pass':
                     case 'host':
@@ -187,7 +188,7 @@ class Net_URL
                             $this->path = sprintf('%s/%s', $path, $value);
                         }
                         break;
-                    
+
                     case 'query':
                         $this->querystring = $this->_parseRawQueryString($value);
                         break;
@@ -236,7 +237,7 @@ class Net_URL
         } else {
             $this->querystring[$name] = is_array($value) ? array_map('rawurlencode', $value): rawurlencode($value);
         }
-    }    
+    }
 
     /**
     * Removes a querystring item
@@ -249,8 +250,8 @@ class Net_URL
         if (isset($this->querystring[$name])) {
             unset($this->querystring[$name]);
         }
-    }    
-    
+    }
+
     /**
     * Sets the querystring to literally what you supply
     *
@@ -261,7 +262,7 @@ class Net_URL
     {
         $this->querystring = $this->_parseRawQueryString($querystring);
     }
-    
+
     /**
     * Returns flat querystring
     *
@@ -301,7 +302,7 @@ class Net_URL
     {
         $parts  = preg_split('/' . preg_quote(ini_get('arg_separator.input')) . '/', $querystring, -1, PREG_SPLIT_NO_EMPTY);
         $return = array();
-        
+
         foreach ($parts as $part) {
             if (strpos($part, '=') !== false) {
                 $value = substr($part, strpos($part, '=') + 1);
@@ -328,7 +329,7 @@ class Net_URL
 
         return $return;
     }
-    
+
     /**
     * Resolves //, ../ and ./ from a path and returns
     * the result. Eg:
@@ -345,7 +346,7 @@ class Net_URL
     function resolvePath($path)
     {
         $path = explode('/', str_replace('//', '/', $path));
-        
+
         for ($i=0; $i<count($path); $i++) {
             if ($path[$i] == '.') {
                 unset($path[$i]);
