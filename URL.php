@@ -132,7 +132,7 @@ class Net_URL {
                 if ($urlinfo['path'][0] == '/') {
                     $this->path = $urlinfo['path'];
                 } else {
-                    $path = dirname($this->path) == '/' ? '' : dirname($this->path);
+                    $path = dirname($this->path) == DIRECTORY_SEPARATOR ? '' : dirname($this->path);
                     $this->path = sprintf('%s/%s', $path, $urlinfo['path']);
                 }
             } else {

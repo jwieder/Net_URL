@@ -3,30 +3,69 @@
 <package version="1.0">
   <name>Net_URL</name>
   <summary>Easy parsing of Urls</summary>
+  <description>
+    Provides easy parsing of URLs and their constituent parts.
+  </description>
+  <license>BSD</license>
   <maintainers>
     <maintainer>
-      <user>heyesr</user>
+      <user>richard</user>
       <name>Richard heyes</name>
-      <email>heyesr@php.net</email>
+      <email>richard@php.net</email>
       <role>lead</role>
     </maintainer>
   </maintainers>
 
   <release>
-    <version>1.0</version>
-    <date>2002-02-17</date>
+    <version>1.0.2</version>
+    <date>2002-04-28</date>
     <state>stable</state>
     <notes>
-      This is the initial release of the Net_URL package.
+      updated to fix a minor irritation when running on windows
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="Net">
         <file role="php">URL.php</file>
         <dir name="docs" role="doc">
-	  <file role="doc">example.php</file>
+          <file role="doc">example.php</file>
         </dir>
       </dir>
     </filelist>
   </release>
 
+  <changelog>
+  <release>
+    <version>1.0.1</version>
+    <date>2002-04-28</date>
+    <state>stable</state>
+    <notes>
+      Maintenance release. Bugs fixed with path detection and defaults.
+    </notes>
+    <filelist>
+      <dir name="/" baseinstalldir="Net">
+        <file role="php">URL.php</file>
+        <dir name="docs" role="doc">
+          <file role="doc">example.php</file>
+        </dir>
+      </dir>
+    </filelist>
+  </release>
+
+    <release>
+      <version>1.0</version>
+      <date>2002-02-17</date>
+      <state>stable</state>
+      <notes>
+        This is the initial release of the Net_URL package.
+      </notes>
+      <filelist>
+        <dir name="/" baseinstalldir="Net">
+          <file role="php">URL.php</file>
+          <dir name="docs" role="doc">
+            <file role="doc">example.php</file>
+          </dir>
+        </dir>
+      </filelist>
+    </release>
+  </changelog>
 </package>
