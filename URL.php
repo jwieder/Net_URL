@@ -392,6 +392,18 @@ class Net_URL
             default:        return null;
        }
     }
+    
+    /**
+    * Forces the URL to a particular protocol
+    *
+    * @param string  $protocol Protocol to force the URL to
+    * @param integer $port     Optional port (standard port is used by default)
+    */
+    function setProtocol($protocol, $port = null)
+    {
+        $this->protocol = $protocol;
+        $this->port = is_null($port) ? $this->getStandardPort() : $port;
+    }
 
 }
 ?>
