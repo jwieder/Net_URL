@@ -88,10 +88,6 @@ class Net_URL {
     {
         global $HTTP_SERVER_VARS;
 		
-		if ( !isset($HTTP_SERVER_VARS) ) {
-			$HTTP_SERVER_VARS = $_SERVER;
-		}
-        
         $this->url         = $url;
         $this->protocol    = 'http' . (@$HTTP_SERVER_VARS['HTTPS'] == 'on' ? 's' : '');
         $this->user        = '';
