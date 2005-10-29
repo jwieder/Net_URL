@@ -34,8 +34,7 @@
 //
 // $Id$
 //
-// Net_URL Class (PHP5 Only)
-
+// Net_URL Class
 
 class Net_URL
 {
@@ -43,64 +42,74 @@ class Net_URL
     * Full url
     * @var string
     */
-    public $url;
+    var $url;
 
     /**
     * Protocol
     * @var string
     */
-    public $protocol;
+    var $protocol;
 
     /**
     * Username
     * @var string
     */
-    public $user;
+    var $username;
 
     /**
     * Password
     * @var string
     */
-    public $pass;
+    var $password;
 
     /**
     * Host
     * @var string
     */
-    public $host;
+    var $host;
 
     /**
     * Port
     * @var integer
     */
-    public $port;
+    var $port;
 
     /**
     * Path
     * @var string
     */
-    public $path;
+    var $path;
 
     /**
     * Query string
     * @var array
     */
-    public $querystring;
+    var $querystring;
 
     /**
     * Anchor
     * @var string
     */
-    public $anchor;
+    var $anchor;
 
     /**
-    * Whether to use [] in querystrings
-    * @var boolean
+    * Whether to use []
+    * @var bool
     */
-    public $useBrackets;
+    var $useBrackets;
 
     /**
-    * Constructor
+    * PHP4 Constructor
+    *
+    * @see __construct()
+    */
+    function Net_URL($url = null, $useBrackets = true)
+    {
+        $this->__construct($url, $useBrackets);
+    }
+
+    /**
+    * PHP5 Constructor
     *
     * Parses the given url and stores the various parts
     * Defaults are used in certain cases
@@ -110,8 +119,10 @@ class Net_URL
     *                            multiple querystrings with the same name
     *                            exist
     */
-    public function __construct($url = null, $useBrackets = true)
+    function __construct($url = null, $useBrackets = true)
     {
+        $HTTP_SERVER_VARS  = !empty($_SERVER) ? $_SERVER : $GLOBALS['HTTP_SERVER_VARS'];
+
         $this->useBrackets = $useBrackets;
         $this->url         = $url;
         $this->user        = '';
@@ -124,13 +135,12 @@ class Net_URL
 
         // Only use defaults if not an absolute URL given
         if (!preg_match('/^[a-z0-9]+:\/\//i', $url)) {
-
             $this->protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http');
 
             /**
             * Figure out host/port
             */
-            if (!empty($_SERVER['HTTP_HOST']) AND preg_match('/^(.*)(:([0-9]+))?$/U', $_SERVER['HTTP_HOST'], $matches)) {
+            if (!empty($HTTP_SERVER_VARS['HTTP_HOST']) AND preg_match('/^(.*)(:([0-9]+))?$/U', $HTTP_SERVER_VARS['HTTP_HOST'], $matches)) {
                 $host = $matches[1];
                 if (!empty($matches[3])) {
                     $port = $matches[3];
@@ -141,10 +151,10 @@ class Net_URL
 
             $this->user        = '';
             $this->pass        = '';
-            $this->host        = !empty($host) ? $host : (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost');
-            $this->port        = !empty($port) ? $port : (isset($_SERVER['SERVER_PORT']) ? $_SERVER['SERVER_PORT'] : $this->getStandardPort($this->protocol));
-            $this->path        = !empty($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '/';
-            $this->querystring = isset($_SERVER['QUERY_STRING']) ? $this->_parseRawQuerystring($_SERVER['QUERY_STRING']) : null;
+            $this->host        = !empty($host) ? $host : (isset($HTTP_SERVER_VARS['SERVER_NAME']) ? $HTTP_SERVER_VARS['SERVER_NAME'] : 'localhost');
+            $this->port        = !empty($port) ? $port : (isset($HTTP_SERVER_VARS['SERVER_PORT']) ? $HTTP_SERVER_VARS['SERVER_PORT'] : $this->getStandardPort($this->protocol));
+            $this->path        = !empty($HTTP_SERVER_VARS['PHP_SELF']) ? $HTTP_SERVER_VARS['PHP_SELF'] : '/';
+            $this->querystring = isset($HTTP_SERVER_VARS['QUERY_STRING']) ? $this->_parseRawQuerystring($HTTP_SERVER_VARS['QUERY_STRING']) : null;
             $this->anchor      = '';
         }
 
@@ -194,8 +204,9 @@ class Net_URL
     * Returns full url
     *
     * @return string Full url
+    * @access public
     */
-    public function getURL()
+    function getURL()
     {
         $querystring = $this->getQueryString();
 
@@ -216,8 +227,9 @@ class Net_URL
     * @param  string $name       Name of item
     * @param  string $value      Value of item
     * @param  bool   $preencoded Whether value is urlencoded or not, default = not
+    * @access public
     */
-    public function addQueryString($name, $value, $preencoded = false)
+    function addQueryString($name, $value, $preencoded = false)
     {
         if ($preencoded) {
             $this->querystring[$name] = $value;
@@ -230,8 +242,9 @@ class Net_URL
     * Removes a querystring item
     *
     * @param  string $name Name of item
+    * @access public
     */
-    public function removeQueryString($name)
+    function removeQueryString($name)
     {
         if (isset($this->querystring[$name])) {
             unset($this->querystring[$name]);
@@ -242,8 +255,9 @@ class Net_URL
     * Sets the querystring to literally what you supply
     *
     * @param  string $querystring The querystring data. Should be of the format foo=bar&x=y etc
+    * @access public
     */
-    public function addRawQueryString($querystring)
+    function addRawQueryString($querystring)
     {
         $this->querystring = $this->_parseRawQueryString($querystring);
     }
@@ -252,15 +266,15 @@ class Net_URL
     * Returns flat querystring
     *
     * @return string Querystring
+    * @access public
     */
-    public function getQueryString()
+    function getQueryString()
     {
         if (!empty($this->querystring)) {
             foreach ($this->querystring as $name => $value) {
-                
                 // Encode var name
                 $name = rawurlencode($name);
-                
+
                 if (is_array($value)) {
                     foreach ($value as $k => $v) {
                         $querystring[] = $this->useBrackets ? sprintf('%s[%s]=%s', $name, $k, $v) : ($name . '=' . $v);
@@ -280,15 +294,52 @@ class Net_URL
     }
 
     /**
-    * Forces the URL to a particular protocol
+    * Parses raw querystring and returns an array of it
     *
-    * @param string  $protocol Protocol to force the URL to
-    * @param integer $port     Optional port (standard port is used by default)
+    * @param  string  $querystring The querystring to parse
+    * @return array                An array of the querystring data
+    * @access private
     */
-    public function setProtocol($protocol, $port = null)
+    function _parseRawQuerystring($querystring)
     {
-        $this->protocol = $protocol;
-        $this->port     = is_null($port) ? $this->getStandardPort($protocol) : $port;
+        $parts  = preg_split('/[' . preg_quote(ini_get('arg_separator.input'), '/') . ']/', $querystring, -1, PREG_SPLIT_NO_EMPTY);
+        $return = array();
+
+        foreach ($parts as $part) {
+            if (strpos($part, '=') !== false) {
+                $value = substr($part, strpos($part, '=') + 1);
+                $key   = substr($part, 0, strpos($part, '='));
+            } else {
+                $value = null;
+                $key   = $part;
+            }
+
+            $key = rawurldecode($key);
+
+            if (preg_match('#^(.*)\[([0-9a-z_-]*)\]#i', $key, $matches)) {
+                $key = $matches[1];
+                $idx = $matches[2];
+
+                // Ensure is an array
+                if (empty($return[$key]) || !is_array($return[$key])) {
+                    $return[$key] = array();
+                }
+
+                // Add data
+                if ($idx === '') {
+                    $return[$key][] = $value;
+                } else {
+                    $return[$key][$idx] = $value;
+                }
+            } elseif (!$this->useBrackets AND !empty($return[$key])) {
+                $return[$key]   = (array)$return[$key];
+                $return[$key][] = $value;
+            } else {
+                $return[$key] = $value;
+            }
+        }
+
+        return $return;
     }
 
     /**
@@ -299,10 +350,12 @@ class Net_URL
     * /foo/bar/../../boo.php => /boo.php
     * /foo/bar/.././/boo.php => /foo/boo.php
     *
+    * This method can also be called statically.
+    *
     * @param  string $url URL path to resolve
     * @return string      The result
     */
-    public static function resolvePath($path)
+    function resolvePath($path)
     {
         $path = explode('/', str_replace('//', '/', $path));
 
@@ -339,7 +392,7 @@ class Net_URL
     *
     * @author Philippe Jausions <Philippe.Jausions@11abacus.com>
     */
-    public static function getStandardPort($scheme)
+    function getStandardPort($scheme)
     {
         switch (strtolower($scheme)) {
             case 'http':    return 80;
@@ -354,53 +407,15 @@ class Net_URL
     }
 
     /**
-    * Parses raw querystring and returns an array of it
+    * Forces the URL to a particular protocol
     *
-    * @param  string  $querystring The querystring to parse
-    * @return array                An array of the querystring data
+    * @param string  $protocol Protocol to force the URL to
+    * @param integer $port     Optional port (standard port is used by default)
     */
-    private function _parseRawQuerystring($querystring)
+    function setProtocol($protocol, $port = null)
     {
-        $parts  = preg_split('/[' . preg_quote(ini_get('arg_separator.input'), '/') . ']/', $querystring, -1, PREG_SPLIT_NO_EMPTY);
-        $return = array();
-
-        foreach ($parts as $part) {
-            if (strpos($part, '=') !== false) {
-                $value = substr($part, strpos($part, '=') + 1);
-                $key   = substr($part, 0, strpos($part, '='));
-            } else {
-                $value = null;
-                $key   = $part;
-            }
-
-            $key = rawurldecode($key);
-
-            if (preg_match('#^(.*)\[([0-9a-z_-]*)\]#i', $key, $matches)) {
-                $key = $matches[1];
-                $idx = $matches[2];
-
-                // Ensure is an array
-                if (empty($return[$key]) || !is_array($return[$key])) {
-                    $return[$key] = array();
-                }
-
-                // Add data
-                if ($idx === '') {
-                    $return[$key][] = $value;
-
-                } else {
-                    $return[$key][$idx] = $value;
-                }
-
-            } elseif (!$this->useBrackets AND !empty($return[$key])) {
-                $return[$key]   = (array)$return[$key];
-                $return[$key][] = $value;
-            } else {
-                $return[$key] = $value;
-            }
-        }
-
-        return $return;
+        $this->protocol = $protocol;
+        $this->port     = is_null($port) ? $this->getStandardPort($protocal) : $port;
     }
 
 }
