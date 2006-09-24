@@ -415,7 +415,7 @@ class Net_URL
     function setProtocol($protocol, $port = null)
     {
         $this->protocol = $protocol;
-        $this->port     = is_null($port) ? $this->getStandardPort($protocal) : $port;
+        $this->port     = is_null($port) ? $this->getStandardPort($protocol) : $port;
     }
 
 }
