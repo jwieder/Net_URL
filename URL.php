@@ -100,8 +100,6 @@ class Net_URL
     */
     var $useBrackets;
 
-    var $url;
-    var $useBrackets;
     /**
     * PHP4 Constructor
     *
@@ -126,7 +124,7 @@ class Net_URL
     function __construct($url = null, $useBrackets = true)
     {
         $this->url = $url;
-        $ths->useBrackets = $useBrackets;
+        $this->useBrackets = $useBrackets;
 
         $this->initialize();
     }
