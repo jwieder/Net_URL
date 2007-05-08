@@ -36,6 +36,8 @@
 //
 // Net_URL Class
 
+define ('NET_URL_ENCODE_QUERY_KEYS', false);
+
 class Net_URL
 {
     /**
@@ -231,6 +233,10 @@ class Net_URL
     */
     function addQueryString($name, $value, $preencoded = false)
     {
+        if (NET_URL_ENCODE_QUERY_KEYS) {
+            $name = rawurlencode($name);
+        }
+
         if ($preencoded) {
             $this->querystring[$name] = $value;
         } else {
@@ -246,6 +252,10 @@ class Net_URL
     */
     function removeQueryString($name)
     {
+        if (NET_URL_ENCODE_QUERY_STRING) {
+            $name = rawurlencode($name);
+        }
+
         if (isset($this->querystring[$name])) {
             unset($this->querystring[$name]);
         }
@@ -314,7 +324,9 @@ class Net_URL
                 $key   = $part;
             }
 
-            $key = rawurldecode($key);
+            if (!NET_URL_ENCODE_QUERY_KEYS) {
+                $key = rawurldecode($key);
+            }
 
             if (preg_match('#^(.*)\[([0-9a-z_-]*)\]#i', $key, $matches)) {
                 $key = $matches[1];
