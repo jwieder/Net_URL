@@ -11,6 +11,12 @@
       <email>richard@php.net</email>
       <role>lead</role>
     </maintainer>
+    <maintainer>
+      <user>davidc</user>
+      <name>David Coallier</name>
+      <email>davidc@php.net</email>
+      <role>lead</role>
+    </maintainer>
   </maintainers>
 
   <release>

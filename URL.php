@@ -36,10 +36,10 @@
 //
 // Net_URL Class
 
-define ('NET_URL_ENCODE_QUERY_KEYS', false);
 
 class Net_URL
 {
+    var $options = array('encode_query_keys' => false);
     /**
     * Full url
     * @var string
@@ -100,6 +100,8 @@ class Net_URL
     */
     var $useBrackets;
 
+    var $url;
+    var $useBrackets;
     /**
     * PHP4 Constructor
     *
@@ -122,6 +124,14 @@ class Net_URL
     *                            exist
     */
     function __construct($url = null, $useBrackets = true)
+    {
+        $this->url = $url;
+        $ths->useBrackets = $useBrackets;
+
+        $this->initialize();
+    }
+
+    function initialize($url = null, $useBrackets = true)
     {
         $HTTP_SERVER_VARS  = !empty($_SERVER) ? $_SERVER : $GLOBALS['HTTP_SERVER_VARS'];
 
@@ -201,7 +211,6 @@ class Net_URL
             }
         }
     }
-
     /**
     * Returns full url
     *
@@ -233,7 +242,7 @@ class Net_URL
     */
     function addQueryString($name, $value, $preencoded = false)
     {
-        if (NET_URL_ENCODE_QUERY_KEYS) {
+        if ($this->getOption('encode_query_keys')) {
             $name = rawurlencode($name);
         }
 
@@ -252,7 +261,7 @@ class Net_URL
     */
     function removeQueryString($name)
     {
-        if (NET_URL_ENCODE_QUERY_STRING) {
+        if ($this->getOption('encode_query_keys')) {
             $name = rawurlencode($name);
         }
 
@@ -324,7 +333,7 @@ class Net_URL
                 $key   = $part;
             }
 
-            if (!NET_URL_ENCODE_QUERY_KEYS) {
+            if (!$this->getOption('encode_query_keys')) {
                 $key = rawurldecode($key);
             }
 
@@ -428,6 +437,46 @@ class Net_URL
     {
         $this->protocol = $protocol;
         $this->port     = is_null($port) ? $this->getStandardPort($protocol) : $port;
+    }
+
+    /**
+     * Set an option
+     *
+     * This function set an option
+     * to be used thorough the script.
+     *
+     * @access public
+     * @param  string $optionName  The optionname to set
+     * @param  string $value       The value of this option.
+     */
+    function setOption($optionName, $value)
+    {
+        if (!array_key_exists($optionName, $this->options)) {
+            return false;
+        }
+
+        $this->options[$optionName] = $value;
+        $this->initialize();
+    }
+
+    /**
+     * Get an option
+     *
+     * This function gets an option
+     * from the $this->options array
+     * and return it's value.
+     *
+     * @access public
+     * @param  string $opionName  The name of the option to retrieve
+     * @see    $this->options
+     */
+    function getOption($optionName)
+    {
+        if (!isset($this->options[$optionName])) {
+            return false;
+        }
+
+        return $this->options[$optionName];
     }
 
 }
