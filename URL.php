@@ -129,12 +129,10 @@ class Net_URL
         $this->initialize();
     }
 
-    function initialize($url = null, $useBrackets = true)
+    function initialize()
     {
         $HTTP_SERVER_VARS  = !empty($_SERVER) ? $_SERVER : $GLOBALS['HTTP_SERVER_VARS'];
 
-        $this->useBrackets = $useBrackets;
-        $this->url         = $url;
         $this->user        = '';
         $this->pass        = '';
         $this->host        = '';
@@ -144,7 +142,7 @@ class Net_URL
         $this->anchor      = '';
 
         // Only use defaults if not an absolute URL given
-        if (!preg_match('/^[a-z0-9]+:\/\//i', $url)) {
+        if (!preg_match('/^[a-z0-9]+:\/\//i', $this->url)) {
             $this->protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http');
 
             /**
@@ -169,8 +167,8 @@ class Net_URL
         }
 
         // Parse the url and store the various parts
-        if (!empty($url)) {
-            $urlinfo = parse_url($url);
+        if (!empty($this->url)) {
+            $urlinfo = parse_url($this->url);
 
             // Default querystring
             $this->querystring = array();
