@@ -229,7 +229,11 @@ class Net_URL
     }
 
     /**
-    * Adds a querystring item
+    * Adds or updates a querystring item (URL parameter).
+    * Automatically encodes parameters with rawurlencode() if $preencoded
+    *  is false.
+    * You can pass an array to $value, it gets mapped via [] in the URL if
+    * $this->useBrackets is activated.
     *
     * @param  string $name       Name of item
     * @param  string $value      Value of item
