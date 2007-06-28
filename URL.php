@@ -148,7 +148,9 @@ class Net_URL
             /**
             * Figure out host/port
             */
-            if (!empty($HTTP_SERVER_VARS['HTTP_HOST']) AND preg_match('/^(.*)(:([0-9]+))?$/U', $HTTP_SERVER_VARS['HTTP_HOST'], $matches)) {
+            if (!empty($HTTP_SERVER_VARS['HTTP_HOST']) && 
+                preg_match('/^(.*)(:([0-9]+))?$/U', $HTTP_SERVER_VARS['HTTP_HOST'], $matches)) 
+            {
                 $host = $matches[1];
                 if (!empty($matches[3])) {
                     $port = $matches[3];
@@ -373,7 +375,7 @@ class Net_URL
     *
     * This method can also be called statically.
     *
-    * @param  string $url URL path to resolve
+    * @param  string $path URL path to resolve
     * @return string      The result
     */
     function resolvePath($path)
