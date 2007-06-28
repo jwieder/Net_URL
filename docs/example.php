@@ -37,8 +37,8 @@
 * constituent parts.
 */
 
-//	include('../URL.php');
-	include('Net/URL.php');
+//include('../URL.php');
+include('Net/URL.php');
 
 	//$url = &new Net_URL('https://www.example.com/foo/bar/index.php?foo=bar');
 	$url = new Net_URL('https://example.com/pls/portal30/PORTAL30.wwpob_page.changetabs?p_back_url=http%3A%2F%2Fexample.com%2Fservlet%2Fpage%3F_pageid%3D360%2C366%2C368%2C382%26_dad%3Dportal30%26_schema%3DPORTAL30&foo=bar');
@@ -47,24 +47,24 @@
 <body>
 
 <pre>
-Protocol...: <?=$url->protocol?>
+Protocol...: <?php echo $url->protocol?>
 
-Username...: <?=$url->user?>
+Username...: <?php echo $url->user?>
 
-Password...: <?=$url->pass?>
+Password...: <?php echo $url->pass?>
 
-Server.....: <?=$url->host?>
+Server.....: <?php echo $url->host?>
 
-Port.......: <?=$url->port?>
+Port.......: <?php echo $url->port?>
 
-File/path..: <?=$url->path?>
+File/path..: <?php echo $url->path?>
 
-Querystring: <?print_r($url->querystring)?>
+Querystring: <?php print_r($url->querystring)?>
 
-Anchor.....: <?=$url->anchor?>
+Anchor.....: <?php echo $url->anchor?>
 
 
-Full URL...: <?=$url->getUrl()?>
+Full URL...: <?php echo $url->getUrl()?>
 </pre>
 
 </body>
