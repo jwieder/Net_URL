@@ -56,13 +56,13 @@ class Net_URL
     * Username
     * @var string
     */
-    var $username;
+    var $user;
 
     /**
     * Password
     * @var string
     */
-    var $password;
+    var $pass;
 
     /**
     * Host
