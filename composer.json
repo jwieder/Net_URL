@@ -14,7 +14,7 @@
     "autoload": {
         "classmap": ["URL.php"]
     },
-    "description": "Provides easy parsing of URLs and their constituent parts."
+    "description": "Provides easy parsing of URLs and their constituent parts.",
     "license": "BSD",
     "name": "pear/net_url",
     "support": {
