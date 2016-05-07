@@ -1,0 +1,27 @@
+{
+    "authors": [
+        {
+            "email": "david@echolibre.com",
+            "name": "David Coallier",
+            "role": "Lead"
+        },
+        {
+            "email": "richard@php.net",
+            "name": "Richard Heyes",
+            "role": "Lead - Inactive"
+        }
+    ],
+    "autoload": {
+        "classmap": [
+            "./"
+        ]
+    },
+    "description": "Provides easy parsing of URLs and their constituent parts."
+    "license": "BSD",
+    "name": "pear/net_url",
+    "support": {
+        "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=Net_URL",
+        "source": "https://github.com/jwieder/Net_URL/"
+    },
+    "type": "library"
+}
