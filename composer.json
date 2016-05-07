@@ -12,9 +12,7 @@
         }
     ],
     "autoload": {
-        "classmap": [
-            "./"
-        ]
+        "classmap": ["URL.php"]
     },
     "description": "Provides easy parsing of URLs and their constituent parts."
     "license": "BSD",
